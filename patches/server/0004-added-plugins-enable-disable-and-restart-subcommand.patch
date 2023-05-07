@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: DinoMarlir <72864666+DinoMarlir@users.noreply.github.com>
+Date: Sun, 7 May 2023 20:28:54 +0200
+Subject: [PATCH] added plugins enable disable and restart subcommand
+
+
+diff --git a/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java b/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
+index f0fce4113fb07c64adbec029d177c236cbdcbae8..522cdc504074d0862b5f07253ef83ecbe4e7ecaa 100644
+--- a/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
++++ b/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
+@@ -26,11 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
+ import org.jetbrains.annotations.NotNull;
+ 
+ import java.lang.reflect.Type;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Collections;
+-import java.util.List;
+-import java.util.TreeMap;
++import java.util.*;
+ 
+ public class PaperPluginsCommand extends BukkitCommand {
+ 
+@@ -168,6 +164,51 @@ public class PaperPluginsCommand extends BukkitCommand {
+     public boolean execute(@NotNull CommandSender sender, @NotNull String currentAlias, @NotNull String[] args) {
+         if (!this.testPermission(sender)) return true;
+ 
++        if (args.length >= 1) {
++            if (!sender.hasPermission("papier.pluginmanager.use")) {
++                sender.sendMessage(Component.text("You don't have the permissions to use this command!").color(NamedTextColor.RED));
++                return true;
++            }
++
++            if (args.length == 2) {
++                String action = args[0];
++                String pluginName = args[1];
++
++                if (Bukkit.getPluginManager().getPlugin(pluginName) == null) {
++                    sender.sendMessage(Component.text("This plugin does not exist!").color(NamedTextColor.RED));
++                    return true;
++                }
++
++                if (action.equalsIgnoreCase("enable")) {
++                    if (Bukkit.getPluginManager().isPluginEnabled(pluginName)) {
++                        sender.sendMessage(Component.text("This plugin is already enabled!").color(NamedTextColor.RED));
++                        return true;
++                    }
++                    Bukkit.getPluginManager().enablePlugin(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName)));
++                    sender.sendMessage(Component.text("Enabled plugin " + pluginName).color(NamedTextColor.GREEN));
++                    return true;
++                }
++                if (action.equalsIgnoreCase("disable")) {
++                    if (!Bukkit.getPluginManager().isPluginEnabled(pluginName)) {
++                        sender.sendMessage(Component.text("This plugin is already disabled!").color(NamedTextColor.RED));
++                        return true;
++                    }
++                    Bukkit.getPluginManager().disablePlugin(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName)));
++                    sender.sendMessage(Component.text("Disabled plugin " + pluginName).color(NamedTextColor.GREEN));
++                    return true;
++                }
++                if (action.equalsIgnoreCase("restart")) {
++                    Bukkit.getPluginManager().disablePlugin(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName)));
++                    Bukkit.getPluginManager().enablePlugin(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin(pluginName)));
++                    sender.sendMessage(Component.text("Restarted plugin " + pluginName).color(NamedTextColor.GREEN));
++                    return true;
++                }
++                return true;
++            }
++
++            return true;
++        }
++
+         TreeMap<String, PluginProvider<JavaPlugin>> paperPlugins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+         TreeMap<String, PluginProvider<JavaPlugin>> spigotPlugins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+ 
+@@ -209,6 +250,8 @@ public class PaperPluginsCommand extends BukkitCommand {
+     @NotNull
+     @Override
+     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
++        if (args.length == 1) return Arrays.asList("enable", "disable", "restart");
++        if (args.length == 2) return Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(plugin -> plugin.getName()).toList();
+         return Collections.emptyList();
+     }
+ 
