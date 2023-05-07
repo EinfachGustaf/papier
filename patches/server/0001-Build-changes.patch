@@ -63,7 +63,7 @@ index 47df6f4268a63118da8187f4102c876bd37d1680..24a3c5228fe22683bc87c0c6251a9e49
  
  public final class CraftServer implements Server {
 -    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "ForkTest"; // ForkTest // Paper
++    private final String serverName = "Papier"; // ForkTest // Paper
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
