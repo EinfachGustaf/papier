@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: DinoMarlir <72864666+DinoMarlir@users.noreply.github.com>
+Date: Sun, 7 May 2023 20:38:16 +0200
+Subject: [PATCH] /plugins | only send tabComplete if player has permission
+
+
+diff --git a/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java b/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
+index 522cdc504074d0862b5f07253ef83ecbe4e7ecaa..0e6a4fdb68be9699a5df26be97d27158e094a1df 100644
+--- a/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
++++ b/src/main/java/io/papermc/paper/command/PaperPluginsCommand.java
+@@ -31,6 +31,7 @@ import java.util.*;
+ public class PaperPluginsCommand extends BukkitCommand {
+ 
+     private static final TextColor INFO_COLOR = TextColor.color(52, 159, 218);
++    private static final String subCommandsPermission = "papier.pluginmanager.use";
+ 
+     // TODO: LINK?
+     private static final Component SERVER_PLUGIN_INFO = Component.text("ℹ What is a server plugin?", INFO_COLOR)
+@@ -165,7 +166,7 @@ public class PaperPluginsCommand extends BukkitCommand {
+         if (!this.testPermission(sender)) return true;
+ 
+         if (args.length >= 1) {
+-            if (!sender.hasPermission("papier.pluginmanager.use")) {
++            if (!sender.hasPermission(subCommandsPermission)) {
+                 sender.sendMessage(Component.text("You don't have the permissions to use this command!").color(NamedTextColor.RED));
+                 return true;
+             }
+@@ -250,8 +251,10 @@ public class PaperPluginsCommand extends BukkitCommand {
+     @NotNull
+     @Override
+     public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+-        if (args.length == 1) return Arrays.asList("enable", "disable", "restart");
+-        if (args.length == 2) return Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(plugin -> plugin.getName()).toList();
++        if (sender.hasPermission(subCommandsPermission)) {
++            if (args.length == 1) return Arrays.asList("enable", "disable", "restart");
++            if (args.length == 2) return Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(plugin -> plugin.getName()).toList();
++        }
+         return Collections.emptyList();
+     }
+ 
