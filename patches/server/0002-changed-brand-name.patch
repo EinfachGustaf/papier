@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: DinoMarlir <72864666+DinoMarlir@users.noreply.github.com>
+Date: Sun, 7 May 2023 18:48:29 +0200
+Subject: [PATCH] changed brand name
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index bf980a5875d39209ee1aa383530e1e912525f9e0..d1a3fbb7eb44c63a5515f829ee5e2a7c2d27edf2 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1682,7 +1682,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     @DontObfuscate
+     public String getServerModName() {
+-        return "ForkTest"; // ForkTest - ForkTest > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Papier"; // ForkTest - ForkTest > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+     }
+ 
+     public SystemReport fillSystemReport(SystemReport details) {
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
+index 818289e831e3dad29345c43265e2efd7689bc500..fa86fa635b7d2437445c37f29eb08bdf5f234776 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServerProperties.java
+@@ -62,7 +62,7 @@ public class DedicatedServerProperties extends Settings<DedicatedServerPropertie
+     public final boolean spawnNpcs = this.get("spawn-npcs", true);
+     public final boolean pvp = this.get("pvp", true);
+     public final boolean allowFlight = this.get("allow-flight", false);
+-    public final String motd = this.get("motd", "A Minecraft Server");
++    public final String motd = this.get("motd", "A Minecraft Server using Papier, a Paper-Fork (https://github.com/EinfachGustaf/papier)");
+     public final boolean forceGameMode = this.get("force-gamemode", false);
+     public final boolean enforceWhitelist = this.get("enforce-whitelist", false);
+     public final Difficulty difficulty;
